@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "python-pytest-testing-project-79"
+version = "0.1.0"
+description = ""
+authors = ["Sergei Mikurov <454004@mail.ru>"]
+readme = "README.md"
+packages = [{include = "python_pytest_testing_project_79"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+
+[tool.poetry.group.dev.dependencies]
+flake8 = "^6.1.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
