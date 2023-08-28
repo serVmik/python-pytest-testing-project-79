@@ -6,12 +6,11 @@ from page_loader import page_loader
 
 
 class TestPageLoader:
+    page_url = 'https://ru.hexlet.io/courses'
     current_path = os.path.dirname(__file__)
+    path_temp = '/var/tmp'
     file_name = 'ru-hexlet-io-courses.html'
     expected_path = os.path.join(current_path, 'fixtures', file_name)
-    page_url = 'https://ru.hexlet.io/courses'
-    path_temp = '/var/tmp'
-
     def test_create_path(self):
         path_assert = '/var/tmp/ru-hexlet-io-courses.html'
         path_created = page_loader.create_path(self.page_url, self.path_temp)
