@@ -4,8 +4,7 @@ import requests
 
 
 def gat_page_data(page_url: str) -> str:
-    page_data = requests.get(page_url).text
-    return page_data
+    return requests.get(page_url).text
 
 
 def create_file_name(page_url: str) -> str:
@@ -15,8 +14,7 @@ def create_file_name(page_url: str) -> str:
 
 
 def create_file_path(directory: str, file_name: str) -> str:
-    file_path = os.path.join(directory, file_name)
-    return file_path
+    return os.path.join(directory, file_name)
 
 
 def save_page_data(page_data: str, file_path: str) -> None:
@@ -24,9 +22,9 @@ def save_page_data(page_data: str, file_path: str) -> None:
         f.write(page_data)
 
 
-def download(page_url: str, directory: str):
-    page_data = gat_page_data(page_url)
-    file_name = create_file_name(page_url)
+def download(page_url: str, directory: str) -> str:
+    page_data: str = gat_page_data(page_url)
+    file_name: str = create_file_name(page_url)
     file_path = create_file_path(directory, file_name)
     save_page_data(page_data, file_path)
     return file_path

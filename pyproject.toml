@@ -1,15 +1,19 @@
 [tool.poetry]
-name = "python-pytest-testing-project-79"
+name = "hexlet-code"
 version = "0.1.0"
 description = ""
 authors = ["Sergei Mikurov <454004@mail.ru>"]
 readme = "README.md"
-packages = [{include = "page_loader"}]
+packages = [
+    { include = "page_loader" }
+]
 
 [tool.poetry.dependencies]
 python = "^3.10"
 requests = "^2.31.0"
 
+[tool.poetry.scripts]
+page-loader = "page_loader.scripts.page_loader:main"
 
 [tool.poetry.group.dev.dependencies]
 flake8 = "^6.1.0"

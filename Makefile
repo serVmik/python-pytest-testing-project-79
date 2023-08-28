@@ -2,7 +2,7 @@ install:
 	poetry install
 
 lint:
-	poetry run flake8 page_loader
+	poetry run flake8
 
 test:
 	poetry run pytest --cov=page_loader -vv -s
@@ -16,4 +16,4 @@ build:
 	poetry build
 
 package-install:
-	python3 -m install --user dist/*.whl
+	python3 -m pip install --user dist/*.whl

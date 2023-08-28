@@ -2,10 +2,10 @@ import os
 import requests_mock
 import tempfile
 
-from page_loader import page_loader
+from page_loader import pg_loader
 
 
-class TestPageLoader:
+class TestDownload:
     page_url = 'https://ru.hexlet.io/courses'
     expected_file_name = 'ru-hexlet-io-courses.html'
     temp_path = '/var/tmp'
@@ -16,13 +16,14 @@ class TestPageLoader:
                                       expected_file_name)
 
     def test_create_file_name(self):
-        file_name = page_loader.create_file_name(self.page_url)
+        file_name = pg_loader.create_file_name(self.page_url)
         assert self.expected_file_name == file_name
 
     def test_create_file_path(self):
-        file_path = page_loader.create_file_path(
-            self.temp_path, self.expected_file_name
-            )
+        file_path = pg_loader.create_file_path(
+            self.temp_path,
+            self.expected_file_name
+        )
         assert self.expected_path == file_path
 
     def test_download(self):
@@ -40,10 +41,10 @@ class TestPageLoader:
                 # run download()
                 # get temp_file_path
                 # save page_mock_data to temp_file
-                temp_file_path = page_loader.download(self.page_url, directory)
+                temp_file_path = pg_loader.download(self.page_url, directory)
                 # is temp_file exists
                 assert os.path.exists(temp_file_path) is True
-                # read current_data from temp_file
+                # read page_mock_data from temp_file
                 with open(temp_file_path) as fc:
                     current_data = fc.read()
                 assert current_data == expected_data
