@@ -4,19 +4,20 @@ import tempfile
 
 from page_loader import pg_loader
 
+page_url = 'https://ru.hexlet.io/courses'
+current_path = os.path.dirname(__file__)
+
 
 class TestDownload:
-    page_url = 'https://ru.hexlet.io/courses'
     expected_file_name = 'ru-hexlet-io-courses.html'
     temp_path = '/var/tmp'
-    current_path = os.path.dirname(__file__)
     expected_path = '/var/tmp/ru-hexlet-io-courses.html'
     path_mock_data = './tests/fixtures/page_mock.html'
     path_expected_data = os.path.join(current_path, 'fixtures',
                                       expected_file_name)
 
     def test_create_file_name(self):
-        file_name = pg_loader.create_file_name(self.page_url)
+        file_name = pg_loader.create_file_name(page_url)
         assert self.expected_file_name == file_name
 
     def test_create_file_path(self):
@@ -35,13 +36,13 @@ class TestDownload:
             page_mock_data = fm.read()
         # add page_mock_data to mock
         with requests_mock.Mocker() as mock:
-            mock.get(self.page_url, text=page_mock_data)
+            mock.get(page_url, text=page_mock_data)
             # create temp directory
             with tempfile.TemporaryDirectory() as directory:
                 # run download()
                 # get temp_file_path
                 # save page_mock_data to temp_file
-                temp_file_path = pg_loader.download(self.page_url, directory)
+                temp_file_path = pg_loader.download(page_url, directory)
                 # is temp_file exists
                 assert os.path.exists(temp_file_path) is True
                 # read page_mock_data from temp_file
@@ -51,7 +52,6 @@ class TestDownload:
 
 
 class TestDownloadImages:
-    page_url = 'https://ru.hexlet.io/courses'
     path_page_before_download = './tests/fixtures/before_download.html'
     path_page_after_download = './tests/fixtures/after_download.html'
     expected_dir_name = 'ru-hexlet-io-courses_files'
@@ -59,11 +59,15 @@ class TestDownloadImages:
     expected_img_path = os.path.join(expected_dir_name, expected_img_name)
 
     def test_create_dir_name(self):
-        current_dir_name = pg_loader.create_dir_name(self.page_url)
-        assert self.expected_dir_name == current_dir_name
+        dir_name = pg_loader.create_dir_name(page_url)
+        assert self.expected_dir_name == dir_name
 
     def test_create_dir(self):
-        pass
+        with tempfile.TemporaryDirectory() as temp_dir_name:
+            dir_name = pg_loader.create_dir_name(page_url)
+            current_dir_name = os.path.join(temp_dir_name, dir_name)
+            pg_loader.create_dir(current_dir_name)
+            assert os.path.exists(current_dir_name) is True
 
     def test_create_img_name(self):
         pass
@@ -78,9 +82,8 @@ class TestDownloadImages:
             page_data_after_download = fa.read()
         with tempfile.TemporaryDirectory() as temp_dir:
             with requests_mock.Mocker() as mock:
-                mock.get(self.page_url, text=page_data_before_download)
-                temp_path_file_html = pg_loader.download(self.page_url,
-                                                         temp_dir)
+                mock.get(page_url, text=page_data_before_download)
+                temp_path_file_html = pg_loader.download(page_url, temp_dir)
                 # does temp_html exists
                 assert os.path.exists(temp_path_file_html) is True
                 # does temp_img exists

@@ -9,6 +9,10 @@ def create_dir_name(page_url: str) -> str:
     return dir_name
 
 
+def create_dir(page_url: str) -> str:
+    pass
+
+
 def gat_page_data(page_url: str) -> str:
     return requests.get(page_url).text
 
