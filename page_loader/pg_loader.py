@@ -3,6 +3,12 @@ import os
 import requests
 
 
+def create_dir_name(page_url: str) -> str:
+    _, url_without_schema = page_url.split('//')
+    dir_name = re.sub('[^a-z0-9]', '-', url_without_schema.lower()) + '_files'
+    return dir_name
+
+
 def gat_page_data(page_url: str) -> str:
     return requests.get(page_url).text
 
