@@ -54,9 +54,19 @@ class TestDownloadImages:
     page_url = 'https://ru.hexlet.io/courses'
     path_page_before_download = './tests/fixtures/before_download.html'
     path_page_after_download = './tests/fixtures/after_download.html'
-    expected_dir_name = 'ru-hexlet-io-courses_files/'
+    expected_dir_name = 'ru-hexlet-io-courses_files'
     expected_img_name = 'ru-hexlet-io-assets-professions-python.png'
     expected_img_path = os.path.join(expected_dir_name, expected_img_name)
+
+    def test_create_dir_name(self):
+        current_dir_name = pg_loader.create_dir_name(self.page_url)
+        assert self.expected_dir_name == current_dir_name
+
+    def test_create_dir(self):
+        pass
+
+    def test_create_img_name(self):
+        pass
 
     def test_download_img(self):
         pass
