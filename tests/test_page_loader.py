@@ -70,7 +70,8 @@ class TestDownloadImages:
             assert os.path.exists(current_dir_name) is True
 
     def test_create_img_name(self):
-        pass
+        current_img_name = pg_loader.create_local_img_name(page_url)
+        assert self.expected_img_name == current_img_name
 
     def test_download_img(self):
         pass
