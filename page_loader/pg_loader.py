@@ -17,6 +17,20 @@ def gat_page_data(page_url: str) -> str:
     return requests.get(page_url).text
 
 
+def get_img_srcs(page_url: str):
+    pass
+
+
+def create_local_img_src(page_url: str) -> str:
+    local_img_src = ''
+    return local_img_src
+
+
+def create_local_img_name(page_url: str) -> str:
+    local_src_img = create_local_img_src(page_url)
+    return local_src_img
+
+
 def create_file_name(page_url: str) -> str:
     _, url_without_schema = page_url.split('//')
     file_name = re.sub('[^a-z0-9]', '-', url_without_schema.lower()) + '.html'
