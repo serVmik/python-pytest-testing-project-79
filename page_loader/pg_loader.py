@@ -9,8 +9,8 @@ def create_dir_name(page_url: str) -> str:
     return dir_name
 
 
-def create_dir(page_url: str) -> str:
-    pass
+def create_dir(dir_name: str) -> None:
+    os.mkdir(dir_name)
 
 
 def gat_page_data(page_url: str) -> str:
