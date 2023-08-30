@@ -1,54 +1,68 @@
 import re
 import os
 import requests
+from bs4 import BeautifulSoup
+from urllib.parse import urlparse
 
 
-def create_dir_name(page_url: str) -> str:
-    _, url_without_schema = page_url.split('//')
-    dir_name = re.sub('[^a-z0-9]', '-', url_without_schema.lower()) + '_files'
-    return dir_name
+def get_paths(page_url, download_dir=None, resource_dir=None):
+    """Creates directories and paths for downloaded content and resources"""
+    def change_view(view):
+        return re.sub('[^a-z0-9]', '-', view.lower()).rstrip()
+
+    download_dir = '' if not download_dir else download_dir
+    resource_dir = '' if not resource_dir else resource_dir
+
+    _, base_url = page_url.split('//')
+    base_path = os.path.join(download_dir, change_view(base_url))
+    url_parse = urlparse(page_url)
+    netloc_path = change_view(url_parse.netloc)
+    resource_dir = change_view(resource_dir).replace('-png', '.png')
+
+    return {
+        'download_dir': download_dir,
+        'local_page_path': f'{base_path}.html',
+        'local_resources_dir': f'{base_path}_files',
+        'local_img_path': f'{base_path}_files/{netloc_path}{resource_dir}',
+    }
 
 
-def create_dir(dir_name: str) -> None:
-    os.mkdir(dir_name)
+def replace_attr(page_content: str, tag: str, attr: str, page_url: str) -> str:
+    """Replaces attributes in the web page tags"""
+    soup = BeautifulSoup(page_content, 'html.parser')
+    img_tags = soup.find_all(tag)
 
+    for img_tag in img_tags:
+        img_tag[attr] = get_paths(
+            page_url,
+            resource_dir=img_tag[attr]
+        )['local_img_path']
 
-def gat_page_data(page_url: str) -> str:
-    return requests.get(page_url).text
-
-
-def get_img_srcs(page_url: str):
-    pass
-
-
-def create_local_img_src(page_url: str) -> str:
-    local_img_src = ''
-    return local_img_src
-
-
-def create_local_img_name(page_url: str) -> str:
-    local_src_img = create_local_img_src(page_url)
-    return local_src_img
-
-
-def create_file_name(page_url: str) -> str:
-    _, url_without_schema = page_url.split('//')
-    file_name = re.sub('[^a-z0-9]', '-', url_without_schema.lower()) + '.html'
-    return file_name
-
-
-def create_file_path(directory: str, file_name: str) -> str:
-    return os.path.join(directory, file_name)
+    changed_page_content = soup.prettify()
+    return changed_page_content
 
 
 def save_page_data(page_data: str, file_path: str) -> None:
+    """Save html to file path"""
     with open(file_path, 'w') as f:
         f.write(page_data)
 
 
-def download(page_url: str, directory: str) -> str:
-    page_data: str = gat_page_data(page_url)
-    file_name: str = create_file_name(page_url)
-    file_path = create_file_path(directory, file_name)
-    save_page_data(page_data, file_path)
+def create_dir_local_resources(dir_name):
+    os.mkdir(dir_name)
+
+
+def download(page_url: str, given_dir: str) -> str:
+    # Get paths
+    paths = get_paths(page_url, given_dir)
+    file_path = paths.get('local_page_path')
+
+    # Create dir for local resources
+    # os.mkdir(file_path)
+
+    # Get content for save
+    page_data: str = requests.get(page_url).text
+    changed_page_content = replace_attr(page_data, 'img', 'src', page_url)
+    save_page_data(changed_page_content, file_path)
+
     return file_path
