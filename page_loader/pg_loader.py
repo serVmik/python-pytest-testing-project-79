@@ -2,7 +2,7 @@ import re
 import os
 import requests
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urljoin, urlparse
 
 
 def get_paths(page_url: str, download_dir=None, resource_name=None) -> dict:
@@ -15,16 +15,26 @@ def get_paths(page_url: str, download_dir=None, resource_name=None) -> dict:
     resource_name: str = '' if not resource_name else resource_name
 
     _, base_url = page_url.split('//')
-    base_path = os.path.join(download_dir, change_view(base_url))
-    url_parse = urlparse(page_url)
-    netloc_path = change_view(url_parse.netloc)
-    resource_name, ext = os.path.splitext(resource_name)
-    resource_name = change_view(resource_name)
+    base_url = change_view(base_url)
+    base_path = os.path.join(download_dir, base_url)
+
+    if resource_name.startswith('http'):
+        resource_name, ext = os.path.splitext(resource_name)
+        url_parse = urlparse(resource_name)
+        url_netloc = url_parse.netloc
+        url_path = url_parse.path
+        resource_name = change_view(url_netloc + url_path)
+    else:
+        resource_name, ext = os.path.splitext(resource_name)
+        resource_name = change_view(resource_name)
+        base_url = change_view(urlparse(page_url).netloc)
+        resource_name = f'{base_url}{resource_name}'
 
     return {
+        'base_url': base_url,
         'page_path': f'{base_path}.html',
         'resources_dir': f'{base_path}_files',
-        'resource_path': f'{base_path}_files/{netloc_path}{resource_name}{ext}',
+        'resource_path': f'{base_path}_files/{resource_name}{ext}',
     }
 
 
@@ -34,19 +44,18 @@ def download_resource(page_url: str, download_dir: str, links: list) -> None:
         os.mkdir(paths['resources_dir'])
 
     for link in links:
-        path = get_paths(
+        paths = get_paths(
             page_url,
             download_dir=download_dir,
             resource_name=link
         )
         resource = requests.get(link)
 
-        with open(path['resource_path'], 'wb') as fr:
+        with open(paths['resource_path'], 'wb') as fr:
             fr.write(resource.content)
 
 
-def replace_attr(page_data: str, tag_name: str, attr_name: str,
-                 page_url: str):
+def replace_attr(page_data: str, tag_name: str, attr_name: str, page_url: str):
     """Replaces the value of attributes in the web page tags"""
 
     soup = BeautifulSoup(page_data, 'html.parser')
@@ -54,12 +63,15 @@ def replace_attr(page_data: str, tag_name: str, attr_name: str,
     links = []
 
     for tag in tags:
-        links.append(tag[attr_name])
-        print(tag[attr_name])
+        attr = tag[attr_name]
+        if not attr.startswith('http'):
+            attr = urljoin(page_url, attr)
+
+        links.append(attr)
 
         tag[attr_name] = get_paths(
             page_url,
-            resource_name=tag[attr_name]
+            resource_name=attr
         )['resource_path']
 
     changed_page_data = soup.prettify()
@@ -73,12 +85,8 @@ def download(page_url: str, download_dir: str) -> str:
     page_path = paths.get('page_path')
     page_data = requests.get(page_url).text
     changed_page_content, links = replace_attr(
-        page_data,
-        'img',
-        'src',
-        page_url
+        page_data, 'img', 'src', page_url
     )
-
     if not os.path.exists(download_dir):
         os.mkdir(download_dir)
     with open(paths['page_path'], 'w') as f:
