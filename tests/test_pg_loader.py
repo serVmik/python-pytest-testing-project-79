@@ -68,31 +68,29 @@ class TestDownloadImages:
                     self.resources_dir_name,
                     self.resource_name
                 )
-
+                # Does exists download directory
                 assert os.path.exists(temp_dir)
+                # Does exists page
                 assert os.path.exists(
                     os.path.join(
                         temp_dir,
                         self.page_name
                     )
                 )
+                # Does exists resources directory
                 assert os.path.exists(
                     os.path.join(
                         temp_dir,
                         self.resources_dir_name
                     )
                 )
-                assert os.path.exists(
-                    os.path.join(
-                        temp_dir,
-                        self.resources_dir_name,
-                        self.resource_name
-                    )
-                )
+                # Does exists resource
                 assert os.path.exists(path_current_resource)
 
                 with open(path_current_resource, 'rb') as frc:
                     current_resource = frc.read()
 
+                # Page content test
                 assert saved_page_data_prettify == current_page_data_prettify
+                # Page resource test
                 assert expected_resource == current_resource
