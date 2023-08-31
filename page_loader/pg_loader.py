@@ -17,24 +17,19 @@ def get_paths(page_url: str, download_dir=None, resource_name=None) -> dict:
     _, base_url = page_url.split('//')
     base_url = change_view(base_url)
     base_path = os.path.join(download_dir, base_url)
+    resource, ext = os.path.splitext(resource_name)
 
     if resource_name.startswith('http'):
-        resource_name, ext = os.path.splitext(resource_name)
-        url_parse = urlparse(resource_name)
-        url_netloc = url_parse.netloc
-        url_path = url_parse.path
-        resource_name = change_view(url_netloc + url_path)
+        url_parse = urlparse(resource)
+        resource = change_view(url_parse.netloc + url_parse.path)
     else:
-        resource_name, ext = os.path.splitext(resource_name)
-        resource_name = change_view(resource_name)
         base_url = change_view(urlparse(page_url).netloc)
-        resource_name = f'{base_url}{resource_name}'
+        resource = f'{base_url}{change_view(resource)}'
 
     return {
-        'base_url': base_url,
         'page_path': f'{base_path}.html',
         'resources_dir': f'{base_path}_files',
-        'resource_path': f'{base_path}_files/{resource_name}{ext}',
+        'resource_path': f'{base_path}_files/{resource}{ext}',
     }
 
 
@@ -56,7 +51,10 @@ def download_resource(page_url: str, download_dir: str, links: list) -> None:
 
 
 def replace_attr(page_data: str, tag_name: str, attr_name: str, page_url: str):
-    """Replaces the value of attributes in the web page tags"""
+    """
+    Replaces the value of attributes in web page tags,
+    creates list of links to resources.
+    """
 
     soup = BeautifulSoup(page_data, 'html.parser')
     tags = soup.find_all(tag_name)

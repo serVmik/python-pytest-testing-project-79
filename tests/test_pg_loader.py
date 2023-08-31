@@ -24,8 +24,6 @@ class TestDownloadImages:
     resources_path = os.path.join(download_path, resources_dir_name)
     resource_name = 'ru-hexlet-io-assets-professions-python.png'
     resource_url = urljoin(page_url, loaded_path_resource)
-    resource_path = os.path.join(download_path, resources_path,
-                                 resource_name)
 
     def test_get_paths(self):
         paths = pg_loader.get_paths(
@@ -73,15 +71,23 @@ class TestDownloadImages:
 
                 assert os.path.exists(temp_dir)
                 assert os.path.exists(
-                    os.path.join(temp_dir, self.page_name)
+                    os.path.join(
+                        temp_dir,
+                        self.page_name
+                    )
                 )
                 assert os.path.exists(
-                    os.path.join(temp_dir, self.resources_dir_name)
+                    os.path.join(
+                        temp_dir,
+                        self.resources_dir_name
+                    )
                 )
                 assert os.path.exists(
-                    os.path.join(temp_dir,
-                                 self.resources_dir_name,
-                                 self.resource_name)
+                    os.path.join(
+                        temp_dir,
+                        self.resources_dir_name,
+                        self.resource_name
+                    )
                 )
                 assert os.path.exists(path_current_resource)
 
