@@ -28,20 +28,42 @@ def get_paths(page_url: str, download_dir=None, resource_name=None) -> dict:
     }
 
 
-def replace_attr(page_data: str, tag: str, attr: str, page_url: str) -> str:
+def download_resource(page_url: str, download_dir: str, links: list) -> None:
+    paths = get_paths(page_url, download_dir)
+    if not os.path.exists(paths['resources_dir']):
+        os.mkdir(paths['resources_dir'])
+
+    for link in links:
+        path = get_paths(
+            page_url,
+            download_dir=download_dir,
+            resource_name=link
+        )
+        resource = requests.get(link)
+
+        with open(path['resource_path'], 'wb') as fr:
+            fr.write(resource.content)
+
+
+def replace_attr(page_data: str, tag_name: str, attr_name: str,
+                 page_url: str):
     """Replaces the value of attributes in the web page tags"""
 
     soup = BeautifulSoup(page_data, 'html.parser')
-    img_tags = soup.find_all(tag)
+    tags = soup.find_all(tag_name)
+    links = []
 
-    for img_tag in img_tags:
-        img_tag[attr] = get_paths(
+    for tag in tags:
+        links.append(tag[attr_name])
+        print(tag[attr_name])
+
+        tag[attr_name] = get_paths(
             page_url,
-            resource_name=img_tag[attr]
+            resource_name=tag[attr_name]
         )['resource_path']
 
     changed_page_data = soup.prettify()
-    return changed_page_data
+    return changed_page_data, links
 
 
 def download(page_url: str, download_dir: str) -> str:
@@ -50,11 +72,18 @@ def download(page_url: str, download_dir: str) -> str:
     paths = get_paths(page_url, download_dir)
     page_path = paths.get('page_path')
     page_data = requests.get(page_url).text
-    changed_page_content = replace_attr(page_data, 'img', 'src', page_url)
+    changed_page_content, links = replace_attr(
+        page_data,
+        'img',
+        'src',
+        page_url
+    )
 
+    if not os.path.exists(download_dir):
+        os.mkdir(download_dir)
     with open(paths['page_path'], 'w') as f:
         f.write(changed_page_content)
 
-    os.mkdir(paths['resources_dir'])
+    download_resource(page_url, download_dir, links)
 
     return page_path
