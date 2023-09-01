@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0">
+  <channel>
+    <title>Новые уроки на Хекслете</title>
+    <description>Практические уроки по программированию</description>
+    <link>https://ru.hexlet.io/</link>
+    <webMaster>info@hexlet.io</webMaster>
+    <item>
+      <title>Комбинаторика / Математика для аналитиков</title>
+      <guid isPermaLink="false">4182</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/combinatorics/theory_unit</link>
+      <description>Цель: Узнаете основные принципы комбинаторики и научитесь использовать их для решения различных задач. Урок помогает понять, какие методы комбинаторики применимы в различных ситуациях и как эффективно решать комбинаторные задачи.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:04 +0000</pubDate>
+    </item>
+    <item>
+      <title>Причинность и совпадение / Математика для аналитиков</title>
+      <guid isPermaLink="false">4181</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/causation-and-coincidence/theory_unit</link>
+      <description>Цель: Поймёте разницу между причинностью и совпадением в статистике и анализе данных. Урок помогает понять важность правильного интерпретирования статистических связей и их причинно-следственных отношений.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:03 +0000</pubDate>
+    </item>
+    <item>
+      <title>Кореляция / Математика для аналитиков</title>
+      <guid isPermaLink="false">4180</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/correlation/theory_unit</link>
+      <description>Цель: Узнаете что такое корреляция и ее значение в анализе данных. Урок помогает понять, как измерять и интерпретировать степень зависимости между переменными, а также научиться использовать различные методы оценки корреляции.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:03 +0000</pubDate>
+    </item>
+    <item>
+      <title>Распределение / Математика для аналитиков</title>
+      <guid isPermaLink="false">4179</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/distribution/theory_unit</link>
+      <description>Цель: Научитесь использовать основы статистического распределения, включая нормальное распределение, и особенности Центральной предельной теоремы. Урок помогает понять, как распределение данных влияет на статистические выводы и как использовать нормальное распределение и ЦПТ для анализа выборочных данных.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:02 +0000</pubDate>
+    </item>
+    <item>
+      <title>Вероятность / Математика для аналитиков</title>
+      <guid isPermaLink="false">4178</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/probability/theory_unit</link>
+      <description>Цель: Освоите основные понятия и методы работы с вероятностью, математическим ожиданием и доверительными интервалами. Научитесь оценивать вероятность событий, вычислять математическое ожидание и строить доверительные интервалы для проверки гипотез.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>Среднее значение / Математика для аналитиков</title>
+      <guid isPermaLink="false">4177</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/average-value/theory_unit</link>
+      <description>Цель: Узнаете понятие среднего и медианы, их различия и применение.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:01 +0000</pubDate>
+    </item>
+    <item>
+      <title>Процент / Математика для аналитиков</title>
+      <guid isPermaLink="false">4176</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/percent/theory_unit</link>
+      <description>Цель: Познакомитесь с такими понятиями как процент, процентный пункт и сложный процент. Урок помогает понять суть и особенности процентных расчетов, а также научиться применять эти знания в практических ситуациях.</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Введение / Математика для аналитиков</title>
+      <guid isPermaLink="false">3200</guid>
+      <link>https://ru.hexlet.io/courses/mathematics-for-analysts/lessons/intro/theory_unit</link>
+      <description>Цель: Познакомимся с курсом</description>
+      <pubDate>Fri, 01 Sep 2023 01:41:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Модули / Terraform: Основы</title>
+      <guid isPermaLink="false">4272</guid>
+      <link>https://ru.hexlet.io/courses/terraform-basics/lessons/terraform-modules/theory_unit</link>
+      <description>Цель: Научимся применять модули Terraform в своей инфраструктуре</description>
+      <pubDate>Thu, 31 Aug 2023 06:59:15 +0000</pubDate>
+    </item>
+    <item>
+      <title>DAO / Java JDBC: Работа с базой данных</title>
+      <guid isPermaLink="false">4248</guid>
+      <link>https://ru.hexlet.io/courses/java_jdbc/lessons/dao/theory_unit</link>
+      <description>Цель: Научиться скрывать работу с базой данных за абстракцией</description>
+      <pubDate>Tue, 29 Aug 2023 14:25:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>Statement / Java JDBC: Работа с базой данных</title>
+      <guid isPermaLink="false">4245</guid>
+      <link>https://ru.hexlet.io/courses/java_jdbc/lessons/statement/theory_unit</link>
+      <description>Цель: Научиться формировать безопасные запросы в базу данных</description>
+      <pubDate>Tue, 29 Aug 2023 14:25:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>try-with-resources / Java JDBC: Работа с базой данных</title>
+      <guid isPermaLink="false">4244</guid>
+      <link>https://ru.hexlet.io/courses/java_jdbc/lessons/try-with-resources/theory_unit</link>
+      <description>Цель: Научиться использовать конструкцию try-with-resources</description>
+      <pubDate>Tue, 29 Aug 2023 14:25:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>Стандартный Workflow / Java JDBC: Работа с базой данных</title>
+      <guid isPermaLink="false">4243</guid>
+      <link>https://ru.hexlet.io/courses/java_jdbc/lessons/workflow/theory_unit</link>
+      <description>Цель: Изучить общий принцип работы с базой данных в приложении</description>
+      <pubDate>Tue, 29 Aug 2023 14:25:32 +0000</pubDate>
+    </item>
+    <item>
+      <title>Введение / Java JDBC: Работа с базой данных</title>
+      <guid isPermaLink="false">4242</guid>
+      <link>https://ru.hexlet.io/courses/java_jdbc/lessons/intro/theory_unit</link>
+      <description>Цель: Познакомиться с курсом</description>
+      <pubDate>Tue, 29 Aug 2023 14:25:32 +0000</pubDate>
+    </item>
+  </channel>
+</rss>
