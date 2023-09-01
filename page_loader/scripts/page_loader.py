@@ -5,7 +5,13 @@ from page_loader.pg_loader import download
 
 def main():
     args = parse_args()
-    print(download(args.url, args.output))
+
+    print(
+        download(
+            args.url,
+            args.output
+        )
+    )
 
 
 if __name__ == '__main__':

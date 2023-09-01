@@ -3,50 +3,75 @@ import os
 import requests
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin, urlparse
+from .logger_config import logger
 
 """
-        Optimize code!
+        Developer Notes
+
+    1. Optimize code!
+
 """
 
 
-def get_paths(page_url: str, download_dir=None, resource_name=None, tag=None) -> dict:
+def change_view(view):
+    return re.sub('[^a-z0-9]', '-', view.lower())
+
+
+def get_dir_name(page_url: str) -> str:
+    base_path, _ = os.path.splitext(page_url)
+    _, base_path = base_path.split('//')
+    return f'{change_view(base_path)}_files'
+
+
+def get_dir_path(page_url: str, download_path: str) -> str:
+    _, base_path = page_url.split('//')
+    dir_path = os.path.join(download_path, change_view(base_path))
+    return f'{dir_path}_files'
+
+
+def get_file_name(page_url: str) -> str:
+    if not page_url.endswith('html'):
+        page_url += '.html'
+    base_path, extension = os.path.splitext(page_url)
+    _, base_path = base_path.split('//')
+    return f'{change_view(base_path)}{extension}'
+
+
+def get_attr_name(page_url: str, attr: str) -> str:
+    url_parse = urlparse(page_url)
+    url_netloc = url_parse.netloc
+
+    attr, extension = os.path.splitext(attr)
+    if attr.startswith('http'):
+        attr_path = urlparse(attr).path
+    else:
+        attr_path = attr
+    attr_name = change_view(url_netloc + attr_path)
+
+    return f'{attr_name}{extension}'
+
+
+def get_paths(page_url, download_path=None, attr=None):
     """Creates dirs and paths for downloaded content and resources"""
 
-    def change_view(view: str) -> str:
-        return re.sub('[^a-z0-9]', '-', view.lower())
-
-    download_dir: str = '' if not download_dir else download_dir
-    resource_name: str = '' if not resource_name else resource_name
-    tag: str = '' if not tag else tag
-
-    _, base_url = page_url.split('//')
-    base_url = change_view(base_url)
-    base_path = os.path.join(download_dir, base_url)
-    resource, ext = os.path.splitext(resource_name)
-
-    if resource_name.startswith('http'):
-        url_parse = urlparse(resource)
-        resource = change_view(url_parse.netloc + url_parse.path)
-    else:
-        base_url = change_view(urlparse(page_url).netloc)
-        resource = f'{base_url}{change_view(resource)}'
-
-    if tag == 'link' and not ext:
-        resource = resource + '.html'
+    download_path = '' if not download_path else download_path
+    attr = '' if not attr else attr
 
     paths = {
-        'page_path': f'{base_path}.html',
-        'resources_dir': f'{base_path}_files',
-        'resource_path': f'{base_path}_files/{resource}{ext}',
+        'page_name': get_file_name(page_url),
+        'page_path': f'{download_path}/{get_file_name(page_url)}',
+        'resources_dir_name': get_dir_name(page_url),
+        'resources_dir_path': get_dir_path(page_url, download_path),
+        'attr_name': get_attr_name(page_url, attr),
+        'attr_path': f'{get_dir_path(page_url, download_path)}/'
+                     f'{get_attr_name(page_url, attr)}',
     }
     return paths
 
 
-def replace_attr(page_data: str, page_url: str, ):
-    """
-    Replaces the value of attributes in web page tags,
-    creates list of links to resources.
-    """
+def replace_attr(page_url: str, page_data: str):
+    """Replaces the value of attributes in web page tags,
+       creates list of links to resources."""
 
     soup = BeautifulSoup(page_data, 'html.parser')
     desired_attr_and_tags = {
@@ -58,56 +83,59 @@ def replace_attr(page_data: str, page_url: str, ):
     for attr_name, tags in desired_attr_and_tags.items():
         for tag in tags:
             attr = tag[attr_name]
+            _, extension = os.path.splitext(attr)
+
+            if not extension:
+                attr += '.html'
+
             if not attr.startswith('http'):
                 attr = urljoin(page_url, attr)
-
-            """Fix this magic"""
-            if attr.endswith('.html'):
-                attr += '.html'
 
             if urlparse(attr).netloc == 'ru.hexlet.io':
                 links.append(attr)
 
                 tag[attr_name] = get_paths(
                     page_url,
-                    resource_name=attr,
-                    tag=tag.name,
-                )['resource_path']
+                    attr=attr,
+                )['attr_path']
 
     changed_page_data = soup.prettify()
     return changed_page_data, links
 
 
-def download_resource(page_url: str, download_dir: str, links: list) -> None:
+def download_resources(page_url: str, download_dir: str, links: list) -> None:
+    """Download resources from links"""
+
     paths = get_paths(page_url, download_dir)
-    if not os.path.exists(paths['resources_dir']):
-        os.mkdir(paths['resources_dir'])
+
+    if not os.path.exists(paths['resources_dir_name']):
+        logger.debug(f'Directory {download_dir} does not exist')
+        os.mkdir(paths["resources_dir_path"])
+        logger.debug(f'Directory {paths["resources_dir_path"]} created')
 
     for link in links:
         paths = get_paths(
             page_url,
-            download_dir=download_dir,
-            resource_name=link
+            download_path=download_dir,
+            attr=link
         )
         resource = requests.get(link)
 
-        with open(paths['resource_path'], 'wb') as fr:
+        with open(paths['attr_path'], 'wb') as fr:
             fr.write(resource.content)
 
 
 def download(page_url: str, download_dir: str) -> str:
     """Downloads the page and its resources, saves them locally"""
 
-    paths = get_paths(page_url, download_dir)
-    page_path = paths.get('page_path')
+    page_path = get_paths(page_url, download_dir)['page_path']
     page_data = requests.get(page_url).text
-    changed_page_content, links = replace_attr(page_data, page_url)
+    changed_page_data, links = replace_attr(page_url, page_data)
 
     if not os.path.exists(download_dir):
         os.mkdir(download_dir)
-    with open(paths['page_path'], 'w') as f:
-        f.write(changed_page_content)
+    with open(page_path, 'w') as f:
+        f.write(changed_page_data)
 
-    download_resource(page_url, download_dir, links)
-
+    download_resources(page_url, download_dir, links)
     return page_path

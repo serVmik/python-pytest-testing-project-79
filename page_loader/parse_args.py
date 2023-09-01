@@ -7,14 +7,15 @@ def parse_args():
         prog="page-loader",
         description='',
     )
-    parser.add_argument('url',
-                        type=str,
-                        )
-    parser.add_argument('-o',
-                        '--output',
-                        default=os.getcwd(),
-                        type=str,
-                        )
+    parser.add_argument(
+        'url',
+        type=str,
+    )
+    parser.add_argument(
+        '-o', '--output',
+        default=os.getcwd(),
+        type=str,
+    )
     args = parser.parse_args()
 
     return args
